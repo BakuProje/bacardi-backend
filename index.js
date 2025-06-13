@@ -15,13 +15,15 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
     cors: {
-        origin: "*",
+        origin: "https://bpsreport.vercel.app",
         methods: ["GET", "POST", "PUT"]
     }
 });
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://bpsreport.vercel.app' // ganti dengan URL frontend kamu di Vercel
+}));
 app.use(express.json());
 
 
@@ -248,7 +250,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 server.listen(PORT, () => {
     console.log(`Server berjalan di port ${PORT}`);
 });
