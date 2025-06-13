@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
 });
 
 
-app.post('/api/reports', async (req, res) => {
+app.post('api/reports', async (req, res) => {
     try {
         const report = new Report({
             growId: req.body.growId,
@@ -143,7 +143,7 @@ app.post('/api/reports', async (req, res) => {
     }
 });
 
-app.get('/api/reports', async (req, res) => {
+app.get('api/reports', async (req, res) => {
     try {
         const reports = await Report.find().sort({ createdAt: -1 });
         res.json(reports);
@@ -152,7 +152,7 @@ app.get('/api/reports', async (req, res) => {
     }
 });
 
-app.get('/api/reports/:id', async (req, res) => {
+app.get('api/reports/:id', async (req, res) => {
     try {
         const report = await Report.findById(req.params.id);
         if (!report) {
@@ -181,7 +181,7 @@ async function deleteReportImages(report) {
     }
 }
 
-app.put('/api/reports/:id/close', async (req, res) => {
+app.put('api/reports/:id/close', async (req, res) => {
     try {
         const report = await Report.findById(req.params.id);
         if (!report) {
@@ -197,7 +197,7 @@ app.put('/api/reports/:id/close', async (req, res) => {
 });
 
 
-app.delete('/api/reports/:id', async (req, res) => {
+app.delete('api/reports/:id', async (req, res) => {
     try {
         const report = await Report.findById(req.params.id);
         if (!report) {
@@ -288,7 +288,7 @@ const upload = multer({
 });
 
 // Route upload
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('api/upload', upload.single('image'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ 
