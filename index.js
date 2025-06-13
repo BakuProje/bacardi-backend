@@ -250,7 +250,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server berjalan di port ${PORT}`);
 });
