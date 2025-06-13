@@ -22,7 +22,7 @@ const io = socketIO(server, {
 
 
 app.use(cors({
-  origin: 'https://bpsreport.vercel.app' // ganti dengan URL frontend kamu di Vercel
+  origin: 'https://bpsreport.vercel.app' 
 }));
 app.use(express.json());
 
@@ -164,7 +164,7 @@ app.get('/api/reports/:id', async (req, res) => {
     }
 });
 
-// Fungsi untuk menghapus file gambar di responses
+
 async function deleteReportImages(report) {
     if (!report || !Array.isArray(report.responses)) return;
     const fs = require('fs');
@@ -255,13 +255,12 @@ server.listen(PORT, () => {
     console.log(`Server berjalan di port ${PORT}`);
 });
 
-// Pastikan folder uploads ada
+
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)){
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Konfigurasi penyimpanan file
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadsDir)
@@ -275,7 +274,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // batas ukuran file 5MB
+        fileSize: 5 * 1024 * 1024 
     },
     fileFilter: function(req, file, cb) {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -287,8 +286,8 @@ const upload = multer({
     }
 });
 
-// Route upload
-app.post('//api/upload', upload.single('image'), (req, res) => {
+
+app.post('/api/upload', upload.single('image'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ 
@@ -312,7 +311,7 @@ app.post('//api/upload', upload.single('image'), (req, res) => {
     }
 });
 
-// Error handling untuk multer
+
 app.use((error, req, res, next) => {
     if (error instanceof multer.MulterError) {
         if (error.code === 'LIMIT_FILE_SIZE') {
@@ -335,8 +334,5 @@ app.use((error, req, res, next) => {
     next();
 });
 
-// Serve static files dari folder uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Serve static files
 app.use('/uploads', express.static('uploads')); 
