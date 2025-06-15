@@ -119,7 +119,6 @@ app.post('/api/reports', async (req, res) => {
 
         const savedReport = await report.save();
 
-        // First auto message
         const autoReply1 = {
             message: 'Admin Kami akan membalas Pesan mu. Silahkan Menunggu',
             isAdmin: true,
@@ -128,8 +127,7 @@ app.post('/api/reports', async (req, res) => {
             createdAt: new Date(),
             read: false
         };
-        
-        // Second WhatsApp message
+
         const autoReply2 = {
             message: 'Kalau mau chat Owner langsung silahkan klik di bawah ini',
             isAdmin: true,
@@ -137,14 +135,12 @@ app.post('/api/reports', async (req, res) => {
             adminAvatar: './img/bacardiai.png',
             createdAt: new Date(),
             read: false,
-            isWhatsAppButton: true  // Add this flag to identify WhatsApp button message
+            isWhatsAppButton: true 
         };
 
-        // Add both messages to responses
         savedReport.responses.push(autoReply1, autoReply2);
         await savedReport.save();
 
-        // Emit new-message events for both messages
         io.to(savedReport._id.toString()).emit('new-message', {
             ...autoReply1,
             reportId: savedReport._id
@@ -190,7 +186,6 @@ async function deleteReportImages(report) {
     const path = require('path');
     for (const resp of report.responses) {
         if (resp.image && typeof resp.image === 'string') {
-            // image path: '/uploads/xxxx.jpg' => uploads/xxxx.jpg
             const filePath = resp.image.startsWith('/') ? resp.image.substring(1) : resp.image;
             const absPath = path.join(__dirname, filePath);
             if (fs.existsSync(absPath)) {
