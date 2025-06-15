@@ -119,20 +119,39 @@ app.post('/api/reports', async (req, res) => {
 
         const savedReport = await report.save();
 
-        const autoReply = {
-            message: 'Admin Kami akan membalasa Pesan mu Silahkan Menunggu',
+        // First auto message
+        const autoReply1 = {
+            message: 'Admin Kami akan membalas Pesan mu. Silahkan Menunggu',
             isAdmin: true,
             adminName: 'Bacardi Asisten',
             adminAvatar: './img/bacardiai.png',
             createdAt: new Date(),
             read: false
         };
-        savedReport.responses.push(autoReply);
+        
+        // Second WhatsApp message
+        const autoReply2 = {
+            message: 'Kalau mau chat Owner langsung silahkan klik di bawah ini',
+            isAdmin: true,
+            adminName: 'Bacardi Asisten',
+            adminAvatar: './img/bacardiai.png',
+            createdAt: new Date(),
+            read: false,
+            isWhatsAppButton: true  // Add this flag to identify WhatsApp button message
+        };
+
+        // Add both messages to responses
+        savedReport.responses.push(autoReply1, autoReply2);
         await savedReport.save();
 
-        io.emit('new-report', savedReport);
+        // Emit new-message events for both messages
         io.to(savedReport._id.toString()).emit('new-message', {
-            ...autoReply,
+            ...autoReply1,
+            reportId: savedReport._id
+        });
+
+        io.to(savedReport._id.toString()).emit('new-message', {
+            ...autoReply2,
             reportId: savedReport._id
         });
 
